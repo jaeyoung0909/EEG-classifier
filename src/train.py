@@ -8,7 +8,6 @@ from torch.utils.data import DataLoader
 import torchvision
 from torchvision import transforms
 
-!pip install -U tensorboardcolab
 from tensorboardcolab import TensorBoardColab
 
 torch.manual_seed(470)
