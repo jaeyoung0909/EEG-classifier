@@ -6,10 +6,20 @@ def csv_load(path):
     data = np.genfromtxt(path, delimiter=',')
     return data
 
+def label_load(path):
+    f = open(path, 'r')
+    f = f.read().split('\n')
+    data = []
+    for line in f:
+        tmp = line.split(',')
+        if len(tmp) == 11:
+            data.append(tmp[2])
+    return data
+
 def fft(data):
     window = np.hamming(data.size)
     N = window.size
-    return np.square(np.absolute(2.0/N * np.fft.fft(window * data)[:N/2]))
+    return np.square(np.absolute(2.0//N * np.fft.fft(window * data)[:N//2]))
 
 
 def eeg2img(data):
@@ -21,7 +31,7 @@ def eeg2img(data):
     eeg1 = []
     eeg2 = []
     emg = []
-    for i in range(freq * time / step):
+    for i in range(freq * time // step):
         print("step {}".format(i+1))
         eeg1_row = []
         eeg2_row = []
@@ -43,4 +53,6 @@ data = csv_load("EDF/190605C1_5min.csv")
 # print(freq)
 # plt.show()
 
-print(eeg2img(data).shape)
+# print(eeg2img(data).shape)
+print(len(data)/4000)
+print(len(label_load("EDF/190605C1_5min_Result.txt")))
