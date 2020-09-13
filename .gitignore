@@ -4,6 +4,9 @@
 # Data directory
 EDF/
 
+# checkpoint directory
+checkpoints/
+
 ### Linux ###
 *~
 
