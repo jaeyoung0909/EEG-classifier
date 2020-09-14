@@ -70,7 +70,7 @@ def eeg2img(data):
     arr = np.dstack((eeg1, eeg2, emg))
     return arr
 
-def eeg2csv(path_eeg):
+def eeg2np(path_eeg):
     batch = 20 * 2000 + 4000 - 250
     step = 4 * 2000
     f = open(path_eeg)
@@ -91,36 +91,3 @@ def eeg2csv(path_eeg):
     save_file = open(path_eeg.split('.')[0] + '.npy', 'wb')
     np.save(save_file, np.array(arr))
     save_file.close()
-
-
-    # arr = []
-    # for i, chunk in enumerate(pd.read_csv(path_eeg, chunksize=step)):
-    #     if i+1 > 10796:
-    #         continue
-    #     print("step {}".format(i+1))
-    #     data = chunk.to_numpy()
-    #     arr.append(eeg2img(data))
-    
-    # f = open(path_eeg.split('.')[0] + '_chunk.npy', 'wb')
-    # np.save(f, np.array(arr))
-    # f.close()
-# eeg2csv("EDF/180812_CH1_46_SD.csv")
-
-# edf2csv("EDF/180812_CH1_46_SD.edf")
-
-# data = csv_load("EDF/190605C1_5min.csv")
-# freq = np.fft.fftfreq(4000, 0.0005)
-# y = fft(data[0:4000, 2])
-# plt.plot(freq[:2000], y)
-# print(freq)
-# plt.show()
-# print(eeg2img(data[:2000*20]).shape)
-
-# labeltxt2csv("EDF/190605C1_5min_Result.txt")
-# print(len(labeltxt2csv("EDF/190605C1_5min_Result.txt")))
-
-# eeg2csv("EDF/190605C1.csv")
-b = np.load("EDF/180812_CH1_46_SD.npy")[:10796]
-print(b.shape)
-# print(len(csv_load("EDF/190605C1.csv"))/20*2000)
-print(label2np("EDF/180812_CH1_46_SD_1.txt").shape)
