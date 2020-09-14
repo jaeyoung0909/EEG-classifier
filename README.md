@@ -20,3 +20,6 @@ We need EEG dataset, which consist of EEG1, EEG2, EMG. Labeled data is also need
 Default labeled data format is extracted from "SleepSign for Animal".
 
 `python src/main.py --train EEG.npy_file_path Labeled_txt` 
+
+#### Reference
+- SPINDLE:End-to-end learning from EEG/EMG to extrapolate animal sleep scoring across experimental settings, labs and species
