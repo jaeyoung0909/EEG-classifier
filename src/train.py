@@ -5,7 +5,7 @@ import torch.optim as optim
 import torch.nn as nn
 import torch.nn.functional as F
 import numpy as np
-from torch.utils.data import TensorDataset, DataLoader
+from torch.utils.data import TensorDataset, DataLoader, random_split
 from model import EEG_Classifier 
 from preprocess import label2np
 
@@ -15,23 +15,26 @@ torch.manual_seed(470)
 torch.cuda.manual_seed(470)
 
 device = 'cuda'
-max_epoch = 40
+max_epoch = 100
 learning_rate = 0.001
 batch_size = 32
 
-eeg_path = "EDF/190605C1_chunk.npy"
-label_path = "EDF/190605C1_Hypno.txt"
-data = np.load(eeg_path)
+eeg_path = "EDF/180812_CH1_46_SD.npy"
+label_path = "EDF/180812_CH1_46_SD_1.txt"
+data = np.load(eeg_path)[:10796]
 B, W, H, C = data.shape
 data = np.reshape(data, (B, C, H, W)) 
 label = label2np(label_path)
-train_x = torch.Tensor(data[:4000])
-train_y = torch.Tensor(label[:4000]).long()
-test_x = torch.Tensor(data[4000:])
-test_y = torch.Tensor(label[4000:]).long()
-train_dataset = TensorDataset(train_x, train_y)
+
+input = torch.Tensor(data)
+label = torch.Tensor(label).long()
+dataset = TensorDataset(input, label)
+
+length = len(dataset)
+train_size = int(length*0.8)
+test_size = length - train_size
+train_dataset, test_dataset = random_split(dataset, [train_size, test_size])
 train_dataloader = DataLoader(train_dataset, batch_size=32)
-test_dataset = TensorDataset(test_x, test_y)
 test_dataloader = DataLoader(test_dataset, batch_size=32)
 
 training_process = True
@@ -65,12 +68,11 @@ if os.path.exists(ckpt_path):
 training_process = True
 if training_process:
     it = 0
-    train_losses = []
-    test_losses = []
     for epoch in range(max_epoch):
         model.train()
         for inputs, labels in train_dataloader:
             it += 1
+            
             inputs = inputs.to(device)
             labels = labels.to(device)
 
@@ -82,11 +84,8 @@ if training_process:
             loss.backward()
             optimizer.step()
             acc = (logits.argmax(dim=1) == labels).float().mean()
-
-            if it % 200 == 0:
-                print('[epoch:{}, iteration:{}] train loacc : {:.4f} train accuracy: {:.4f}'.format(epoch+1, it, loss.item(), acc.item()))
-        
-        train_losses.append(loss)
+            # if it % 200 == 0:
+            #     print('[epoch:{}, iteration:{}] train loacc : {:.4f} train accuracy: {:.4f}'.format(epoch+1, it, loss.item(), acc.item()))
 
         n = 0
         test_loss = 0.
@@ -95,13 +94,14 @@ if training_process:
         for test_inputs, test_labels in test_dataloader:
             test_inputs = test_inputs.to(device)
             test_labels = test_labels.to(device)
+            if not torch.cuda.is_available():
+                print("check")
             logits = model(test_inputs)
             test_loss += F.cross_entropy(logits, test_labels, reduction='sum')
             test_acc += (logits.argmax(dim=1) == test_labels).float().sum().item()
             n += test_inputs.size(0)
         test_loss /= n
         test_acc /= n 
-        test_losses.append(test_loss)
         print('[epoch:{}, iteration:{}] test_loss : {:.4f} test accuracy : {:.4f}'.format(epoch+1, it, test_loss, test_acc)) 
 
         # save checkpoint whenever there is improvement in performance
