@@ -1,5 +1,5 @@
 # EEG-classifier
-This project is EEG data classifier for researcher obtaining EEG data from mice. It classifies whether given EEG data indicate which state; W(wake), R(ram), NR(non-ram). Implemented model is based on [this paper](https://journals.plos.org/ploscompbiol/article/file?id=10.1371/journal.pcbi.1006968&type=printable).
+This project is EEG data classifier for researcher obtaining EEG data from mice. It classifies whether given EEG data indicate which state; W(Wake), R(REM), NR(non-REM). Implemented model is based on [this paper](https://journals.plos.org/ploscompbiol/article/file?id=10.1371/journal.pcbi.1006968&type=printable).
 
 ## How to use
 
