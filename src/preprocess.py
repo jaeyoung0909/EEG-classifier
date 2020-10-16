@@ -18,7 +18,7 @@ def label2np(path):
         tmp = line.split(',')
         if len(tmp) == 11:
             data.append(tmp[2])
-    data = data[4:-2]
+    data = data[4:-3]
     def criteria(char):
         if char == 'W':
             return 0

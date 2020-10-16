@@ -16,10 +16,14 @@ class EEG_Model:
         self._test_dataloader = None
 
     def fit(self, eeg_path, label_path, batch_size = 32):
-        data = np.load(eeg_path)[:10796]
+        data = np.load(eeg_path)
         B, W, H, C = data.shape
         data = np.reshape(data, (B, C, H, W)) 
         label = label2np(label_path)
+        size = min(B, label.size)
+        data = data[:size]
+        label = label[:size]
+
         input = torch.Tensor(data)
         label = torch.Tensor(label).long()
         dataset = TensorDataset(input, label)
