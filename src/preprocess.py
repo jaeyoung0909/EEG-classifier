@@ -38,7 +38,7 @@ def edf2csv(path):
 def fft(data):
     window = np.hamming(data.size)
     N = window.size
-    return np.square(np.absolute(2.0/N * np.fft.fft(window * data)[:N//2]))
+    return np.log(np.square(np.absolute(2.0/N * np.fft.fft(window * data)[:N//2])))
 
 
 def eeg2img(data):

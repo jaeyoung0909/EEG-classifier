@@ -15,7 +15,7 @@ class EEG_Model:
         self._train_dataloader = None
         self._test_dataloader = None
 
-    def fit(self, eeg_path, label_path, batch_size = 32):
+    def fit(self, eeg_path, label_path, batch_size = 128):
         data = np.load(eeg_path)
         B, W, H, C = data.shape
         data = np.reshape(data, (B, C, H, W)) 
@@ -35,7 +35,7 @@ class EEG_Model:
         self._train_dataloader = DataLoader(train_dataset, batch_size=batch_size)
         self._test_dataloader = DataLoader(test_dataset, batch_size=batch_size)
     
-    def train(self, max_epoch = 100, learning_rate = 0.001, ckpt = 'EEGmodel.pt', device = 'cuda'):
+    def train(self, max_epoch = 100, learning_rate = 0.0005, ckpt = 'EEGmodel.pt', device = 'cuda'):
         torch.manual_seed(470)
         torch.cuda.manual_seed(470)
         model = EEG_Classifier()
